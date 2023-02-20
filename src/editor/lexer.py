@@ -1,8 +1,9 @@
+# STD
 import re
 import keyword
 import types
 import builtins
-
+# Installed
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *

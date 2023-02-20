@@ -1,13 +1,14 @@
+# STD
 import os
 import sys
 from pathlib import Path
-
+# Installed
 from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.Qsci import *
-
-from editor import Editor
+# Custom
+from editor.editor import Editor
 from fuzzy_finder import SearchItem, SearchWorker
 
 
@@ -29,7 +30,7 @@ class MainWindow(QMainWindow):
         self.resize(900, 700)
 
         # Style
-        self.setStyleSheet(open("./src/css/style.qss", "r").read())
+        self.setStyleSheet(open("./src/static/css/style.qss", "r").read())
         self.window_font = QFont("FiraCode")
         self.window_font.setPointSize(12)
         self.setFont(self.window_font)
@@ -86,8 +87,8 @@ class MainWindow(QMainWindow):
         find_action.setShortcut("Ctrl+F")
         find_action.triggered.connect(self.find)
 
-    def get_editor(self) -> QsciScintilla:
-        editor = Editor()
+    def get_editor(self, path: Path = None, is_python_file=True) -> QsciScintilla:
+        editor = Editor(path=path, is_python_file=is_python_file)
         return editor
 
     def is_binary(self, path):
@@ -98,7 +99,7 @@ class MainWindow(QMainWindow):
             return b'\0' in f.read(1024)
 
     def set_new_tab(self, path: Path, is_new_file=False):
-        editor = self.get_editor()
+        editor = self.get_editor(path, path.suffix in {".py", ".pyw"})
 
         if is_new_file:
             self.tab_view.addTab(editor, "untitled")
@@ -199,11 +200,11 @@ class MainWindow(QMainWindow):
 
         # SetUp Labels (sidebar icons)
         folder_label = self.get_side_bar_label(
-            "./src/icons/folder-icon-blue.svg", "file-manager")
+            "./src/static/icons/folder-icon-blue.svg", "file-manager")
         side_bar_layout.addWidget(folder_label)
 
         search_label = self.get_side_bar_label(
-            "./src/icons/search-icon.svg", "search-manager")
+            "./src/static/icons/search-icon.svg", "search-manager")
         side_bar_layout.addWidget(search_label)
 
         self.side_bar.setLayout(side_bar_layout)
