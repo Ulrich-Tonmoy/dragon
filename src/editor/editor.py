@@ -1,14 +1,10 @@
-# STD
-import keyword
-import pkgutil
 from pathlib import Path
 # Installed
-from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 from PyQt6.QtGui import *
 from PyQt6.Qsci import *
 # Custom
-from editor.lexer import CustomLexer
+from editor.custom_lexer import CustomLexer
 from editor.autocomplete import AutoComplete
 import resources
 
@@ -71,12 +67,6 @@ class Editor(QsciScintilla):
         else:
             self.setPaper(QColor("#282c34"))
             self.setColor(QColor("#abb2bf"))
-            # for key in keyword.kwlist + dir(__builtins__):
-            #     self.api.add(key)
-            # for _, name, _ in pkgutil.iter_modules():
-            #     self.api.add(name)
-
-            self.api.prepare()
 
         # Line Number
         self.setMarginType(0, QsciScintilla.MarginType.NumberMargin)
