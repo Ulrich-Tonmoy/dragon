@@ -152,18 +152,6 @@ class MainWindow(QMainWindow):
         frame.setFrameShape(QFrame.Shape.NoFrame)
         frame.setFrameShadow(QFrame.Shadow.Plain)
         frame.setContentsMargins(0, 0, 0, 0)
-        frame.setStyleSheet('''
-            QFrame{
-                background-color: #21252b;
-                border-radius: 5px;
-                border: none;
-                padding: 5px;
-                color: #D3D3D3;
-            }
-            QFrame:hover{
-                color: white;
-            }
-        ''')
         return frame
 
     def set_up_body(self):
@@ -276,18 +264,6 @@ class MainWindow(QMainWindow):
         search_input.setPlaceholderText("Search...")
         search_input.setFont(self.window_font)
         search_input.setAlignment(Qt.AlignmentFlag.AlignTop)
-        search_input.setStyleSheet("""
-        QLineEdit{
-            background-color: #21252b;
-            border-radius: 5px;
-            border: 1px solid #d3d3d3;
-            padding: 5px;
-            color: #D3D3D3;
-        }
-        QLineEdit:hover{
-            color: white;
-        }
-        """)
 
         ############## CheckBox##############
         self.search_checkbox = QCheckBox("Search in modules")
@@ -309,15 +285,6 @@ class MainWindow(QMainWindow):
         ############## Search Result View ##############
         self.search_list_view = QListWidget()
         self.search_list_view.setFont(QFont("FiraCode", 13))
-        self.search_list_view.setStyleSheet("""
-        QListWidget{
-            background-color: #21252b;
-            border-radius: 5px;
-            border: 1px solid #d3d3d3;
-            padding: 5px;
-            color: #d3d3d3;
-        }
-        """)
         self.search_list_view.itemClicked.connect(
             self.search_list_view_clicked)
 
