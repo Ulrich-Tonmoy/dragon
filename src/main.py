@@ -9,6 +9,7 @@ from PyQt6.QtGui import *
 from PyQt6.Qsci import *
 # Custom
 from editor.editor import Editor
+from file_manager import FileManager
 from fuzzy_finder import SearchItem, SearchWorker
 
 
@@ -34,6 +35,8 @@ class MainWindow(QMainWindow):
         self.window_font = QFont("FiraCode")
         self.window_font.setPointSize(12)
         self.setFont(self.window_font)
+
+        self.statusBar().setStyleSheet("color : white")
 
         self.set_up_menu()
         self.set_up_body()
@@ -73,25 +76,25 @@ class MainWindow(QMainWindow):
 
         cut_action = edit_menu.addAction("Undo")
         cut_action.setShortcut("Ctrl+Z")
-        cut_action.triggered.connect(self.undo)
+        cut_action.triggered.connect(self._undo)
 
         cut_action = edit_menu.addAction("Redo")
         cut_action.setShortcut("Ctrl+Y")
-        cut_action.triggered.connect(self.redo)
+        cut_action.triggered.connect(self._redo)
 
         edit_menu.addSeparator()
 
         cut_action = edit_menu.addAction("Cut")
         cut_action.setShortcut("Ctrl+X")
-        cut_action.triggered.connect(self.cut)
+        cut_action.triggered.connect(self._cut)
 
         copy_action = edit_menu.addAction("Copy")
         copy_action.setShortcut("Ctrl+C")
-        copy_action.triggered.connect(self.copy)
+        copy_action.triggered.connect(self._copy)
 
         paste_action = edit_menu.addAction("Paste")
         paste_action.setShortcut("Ctrl+V")
-        paste_action.triggered.connect(self.paste)
+        paste_action.triggered.connect(self._paste)
 
         edit_menu.addSeparator()
 
@@ -183,6 +186,16 @@ class MainWindow(QMainWindow):
 
         body_frame.setLayout(body)
 
+        ######################################
+        ############## Tab View ##############
+        # Tab Widget to add editor to
+        self.tab_view = QTabWidget()
+        self.tab_view.setContentsMargins(0, 0, 0, 0)
+        self.tab_view.setTabsClosable(True)
+        self.tab_view.setMovable(True)
+        self.tab_view.setDocumentMode(True)
+        self.tab_view.tabCloseRequested.connect(self.close_tab)
+
         ##########################################
         ############## Sidebar View ##############
         self.side_bar = QFrame()
@@ -219,47 +232,16 @@ class MainWindow(QMainWindow):
         self.file_manager_frame.setMaximumWidth(400)
         self.file_manager_frame.setMinimumWidth(150)
 
-        tree_frame_layout = QVBoxLayout()
-        tree_frame_layout.setContentsMargins(0, 0, 0, 0)
-        tree_frame_layout.setSpacing(0)
+        self.file_manager_layout = QVBoxLayout()
+        self.file_manager_layout.setContentsMargins(0, 0, 0, 0)
+        self.file_manager_layout.setSpacing(0)
 
-        # Create file system model to show in tree
-        self.model = QFileSystemModel()
-        self.model.setRootPath(os.getcwd())
+        self.file_manager = FileManager(
+            tab_view=self.tab_view, set_new_tab=self.set_new_tab, main_window=self)
 
-        # File system filters
-        self.model.setFilter(
-            QDir.Filter.NoDotAndDotDot | QDir.Filter.AllDirs | QDir.Filter.Files)
-
-        ############################################
-        ############## File Tree View ##############
-        self.tree_view = QTreeView()
-        self.tree_view.setFont(QFont("FiraCode", 13))
-        self.tree_view.setModel(self.model)
-        self.tree_view.setRootIndex(self.model.index(os.getcwd()))
-        self.tree_view.setSelectionMode(
-            QTreeView.SelectionMode.SingleSelection)
-        self.tree_view.setSelectionBehavior(
-            QTreeView.SelectionBehavior.SelectRows)
-        self.tree_view.setEditTriggers(QTreeView.EditTrigger.NoEditTriggers)
-
-        # Add Custom Context Menu
-        self.tree_view.setContextMenuPolicy(
-            Qt.ContextMenuPolicy.CustomContextMenu)
-        self.tree_view.customContextMenuRequested.connect(
-            self.tree_view_context_menu)
-
-        # Handling Click
-        self.tree_view.clicked.connect(self.tree_view_clicked)
-        self.tree_view.setIndentation(10)
-        self.tree_view.setSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-
-        # Hide other column except name
-        self.tree_view.setHeaderHidden(True)
-        self.tree_view.setColumnHidden(1, True)
-        self.tree_view.setColumnHidden(2, True)
-        self.tree_view.setColumnHidden(3, True)
+        # Setup Layout
+        self.file_manager_layout.addWidget(self.file_manager)
+        self.file_manager_frame.setLayout(self.file_manager_layout)
 
         #########################################
         ############## Search View ##############
@@ -307,20 +289,6 @@ class MainWindow(QMainWindow):
         search_layout.addWidget(self.search_list_view)
         self.search_frame.setLayout(search_layout)
 
-        # Setup Layout
-        tree_frame_layout.addWidget(self.tree_view)
-        self.file_manager_frame.setLayout(tree_frame_layout)
-
-        ######################################
-        ############## Tab View ##############
-        # Tab Widget to add editor to
-        self.tab_view = QTabWidget()
-        self.tab_view.setContentsMargins(0, 0, 0, 0)
-        self.tab_view.setTabsClosable(True)
-        self.tab_view.setMovable(True)
-        self.tab_view.setDocumentMode(True)
-        self.tab_view.tabCloseRequested.connect(self.close_tab)
-
         # Add Tree View and Tab View
         self.h_split.addWidget(self.file_manager_frame)
         self.h_split.addWidget(self.tab_view)
@@ -360,14 +328,6 @@ class MainWindow(QMainWindow):
                 frame.hide()
         self.current_open_sidebar = type_
 
-    def tree_view_context_menu(self, pos):
-        ...
-
-    def tree_view_clicked(self, index: QModelIndex):
-        path = self.model.filePath(index)
-        p = Path(path)
-        self.set_new_tab(p)
-
     def new_file(self):
         self.set_new_tab(None, is_new_file=True)
 
@@ -387,8 +347,8 @@ class MainWindow(QMainWindow):
         new_folder = QFileDialog.getExistingDirectory(
             self, "Pick a Folder", "", options=ops)
         if new_folder:
-            self.model.setRootPath(new_folder)
-            self.tree_view.setRootIndex(self.model.index(new_folder))
+            self.model = self.file_manager.model
+            self.file_manager.setRootIndex(self.model.index(new_folder))
             self.statusBar().showMessage(
                 f"Opened {new_folder}", 2000)
 
@@ -416,27 +376,27 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(f"Saved {path.name}", 2000)
         self.current_file = path
 
-    def undo(self):
+    def _undo(self):
         editor = self.tab_view.currentWidget()
         if editor is not None:
             editor.undo()
 
-    def redo(self):
+    def _redo(self):
         editor = self.tab_view.currentWidget()
         if editor is not None:
             editor.redo()
 
-    def cut(self):
+    def _cut(self):
         editor = self.tab_view.currentWidget()
         if editor is not None:
             editor.cut()
 
-    def copy(self):
+    def _copy(self):
         editor = self.tab_view.currentWidget()
         if editor is not None:
             editor.copy()
 
-    def paste(self):
+    def _paste(self):
         editor = self.tab_view.currentWidget()
         if editor is not None:
             editor.paste()
