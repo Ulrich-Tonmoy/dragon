@@ -6,7 +6,6 @@ from PyQt6.Qsci import *
 # Custom
 from editor.custom_lexer import CustomLexer
 from editor.autocomplete import AutoComplete
-import resources
 
 
 class Editor(QsciScintilla):

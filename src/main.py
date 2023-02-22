@@ -25,12 +25,12 @@ class MainWindow(QMainWindow):
 
     def init_ui(self):
         # Window
-        # self.setWindowIcon(QIcon("./src/icons/logo.png"))
         self.setWindowTitle("Dragon")
         self.resize(900, 700)
 
         # Style
-        self.setStyleSheet(open("./src/static/css/style.qss", "r").read())
+        self.setStyleSheet(
+            open("./resources/static/css/style.qss", "r").read())
         self.window_font = QFont("FiraCode")
         self.window_font.setPointSize(12)
         self.setFont(self.window_font)
@@ -188,11 +188,11 @@ class MainWindow(QMainWindow):
 
         # SetUp Labels (sidebar icons)
         folder_label = self.get_side_bar_label(
-            "./src/static/icons/folder-icon-blue.svg", "file-manager")
+            "./resources/editor-icons/folder.svg", "file-manager")
         side_bar_layout.addWidget(folder_label)
 
         search_label = self.get_side_bar_label(
-            "./src/static/icons/search-icon.svg", "search-manager")
+            "./resources/editor-icons/search.svg", "search-manager")
         side_bar_layout.addWidget(search_label)
 
         self.side_bar.setLayout(side_bar_layout)

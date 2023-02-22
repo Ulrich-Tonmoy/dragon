@@ -19,7 +19,7 @@ class BaseLexer(QsciLexerCustom):
         self.language_name = language_name
         self.theme_json = None
         if theme is None:
-            self.theme = "./src/static/data/theme.json"
+            self.theme = "./resources/static/data/theme.json"
         else:
             self.theme = theme
         self.token_list: list[str, str] = []

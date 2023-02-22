@@ -12,6 +12,6 @@
     1. If you don't have python install it from [here](https://www.python.org/downloads/) and then install it after that run `pip install virtualenv` to install the package.
     2. Run `deactivate` to deactivate the virtual environment.
     3. Run `pip freeze > requirements.txt` to update the requirements list after installing new package.
-    4. Run `pyside6-rcc ./src/static/icons/resources.qrc -o ./src/resources.py` to build resources.py file.
+    4. Run `pyside6-rcc ./resources/editor-icons/resources.qrc -o ./src/resources.py` to build resources.py file.
 
 <!-- https://github.com/Fus3n/pyqt-code-editor-yt -->
