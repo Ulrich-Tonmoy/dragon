@@ -71,6 +71,16 @@ class MainWindow(QMainWindow):
         # Edit Menu
         edit_menu = menu_bar.addMenu("Edit")
 
+        cut_action = edit_menu.addAction("Undo")
+        cut_action.setShortcut("Ctrl+Z")
+        cut_action.triggered.connect(self.undo)
+
+        cut_action = edit_menu.addAction("Redo")
+        cut_action.setShortcut("Ctrl+Y")
+        cut_action.triggered.connect(self.redo)
+
+        edit_menu.addSeparator()
+
         cut_action = edit_menu.addAction("Cut")
         cut_action.setShortcut("Ctrl+X")
         cut_action.triggered.connect(self.cut)
@@ -82,6 +92,8 @@ class MainWindow(QMainWindow):
         paste_action = edit_menu.addAction("Paste")
         paste_action.setShortcut("Ctrl+V")
         paste_action.triggered.connect(self.paste)
+
+        edit_menu.addSeparator()
 
         find_action = edit_menu.addAction("Find")
         find_action.setShortcut("Ctrl+F")
@@ -404,6 +416,16 @@ class MainWindow(QMainWindow):
         self.statusBar().showMessage(f"Saved {path.name}", 2000)
         self.current_file = path
 
+    def undo(self):
+        editor = self.tab_view.currentWidget()
+        if editor is not None:
+            editor.undo()
+
+    def redo(self):
+        editor = self.tab_view.currentWidget()
+        if editor is not None:
+            editor.redo()
+
     def cut(self):
         editor = self.tab_view.currentWidget()
         if editor is not None:
@@ -415,7 +437,9 @@ class MainWindow(QMainWindow):
             editor.copy()
 
     def paste(self):
-        ...
+        editor = self.tab_view.currentWidget()
+        if editor is not None:
+            editor.paste()
 
     def find(self):
         ...
