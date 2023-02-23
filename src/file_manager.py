@@ -206,9 +206,9 @@ class FileManager(QTreeView):
             for url in e.mimeData().urls():
                 path = Path(url.toLocalFile())
                 if path.is_dir():
-                    shutil.copytree(path, root_path / path.name)
+                    shutil.move(path, root_path / path.name)
                 else:
-                    shutil.copy(path, root_path / path.name)
+                    shutil.move(path, root_path / path.name)
         e.accept()
 
         return super().dropEvent(e)
