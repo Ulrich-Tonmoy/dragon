@@ -146,28 +146,20 @@ class FileManager(QTreeView):
         self.edit(_index)
 
     def action_new_folder(self, index):
-        # TODO!
-        # root_path = self.model.rootPath()
-        # if index.column() != -1:
-        #     if self.model.isDir(index):
-        #         self.expand(index)
-        #         root_path = self.model.filePath(index)
+        root_path = self.model.rootPath()
+        if index.column() != -1:
+            if self.model.isDir(index):
+                self.expand(index)
+                root_path = self.model.filePath(index)
 
-        # f = Path(root_path) / "New Folder"
-        # count = 1
-        # while f.exists():
-        #     f = Path(f.parent / f"New Folder{count}")
-        #     count += 1
-        # new_folder = self.model.mkdir(f)
-        # self.edit(new_folder)
-
-        f = Path(self.model.rootPath()) / "New Folder"
+        f = Path(root_path) / "New Folder"
         count = 1
         while f.exists():
             f = Path(f.parent / f"New Folder{count}")
             count += 1
-        new_folder = self.model.mkdir(self.rootIndex(), f.name)
-        self.edit(new_folder)
+        f.mkdir()
+        _index = self.model.index(str(f.absolute()))
+        self.edit(_index)
 
     def action_rename(self, index):
         self.edit(index)
