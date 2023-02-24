@@ -1,0 +1,105 @@
+{
+    "theme": {
+        "name": "default-dark",
+        "version": "1.0",
+
+        "syntax": [
+            {
+                "default": {
+                    "color": "#abb2bf",
+                    "bg-color": "#282c34",
+                    "font": {
+                        "family": "consolas",
+                        "font-size": 14,
+                        "font-weight": "bold",
+                        "italic": false
+                    }
+                }
+            },
+            {
+                "keyword": {
+                    "color": "#c678dd",
+                    "bg-color": "#282c34",
+                    "font": {
+                        "family": "consolas",
+                        "font-size": 14,
+                        "font-weight": "bold",
+                        "italic": false
+                    }
+                }
+            },
+            {
+                "classes": {
+                    "color": "#C68F55",
+                    "bg-color": "#282c34",
+                    "font": {
+                        "family": "consolas",
+                        "font-size": 14,
+                        "font-weight": "bold",
+                        "italic": false
+                    }
+                }
+            },
+            {
+                "functions": {
+                    "color": "#61afd1",
+                    "bg-color": "#282c34",
+                    "font": {
+                        "family": "consolas",
+                        "font-size": 14,
+                        "font-weight": "bold",
+                        "italic": false
+                    }
+                }
+            },
+            {
+                "function_def": {
+                    "color": "#61afd1",
+                    "bg-color": "#282c34",
+                    "font": {
+                        "family": "consolas",
+                        "font-size": 14,
+                        "font-weight": "bold",
+                        "italic": true
+                    }
+                }
+            },
+            {
+                "string": {
+                    "color": "#98c379",
+                    "bg-color": "#282c34"
+                }
+            },
+            {
+                "types": {
+                    "color": "#56b6c2",
+                    "bg-color": "#282c34"
+                }
+            },
+            {
+                "keyargs": {
+                    "color": "#c678dd",
+                    "bg-color": "#282c34"
+                }
+            },
+            {
+                "brackets": {
+                    "color": "#c678dd",
+                    "bg-color": "#282c34"
+                }
+            },
+            {
+                "comments": {
+                    "color": "#777777",
+                    "bg-color": "#282c34"
+                }
+            },
+            {
+                "constants": {
+                    "color": "#d19a5e",
+                    "bg-color": "#282c34"
+                }
+            }
+        ]
+    }
+}

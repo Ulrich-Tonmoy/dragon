@@ -121,7 +121,7 @@ class FileManager(QTreeView):
         dialog.setFont(self.manager_font)
         dialog.font().setPointSize(14)
         dialog.setWindowTitle(title)
-        dialog.setWindowIcon(QIcon("./resources/editor-icons/trash.svg"))
+        dialog.setWindowIcon(QIcon("./src/resources/editor-icons/trash.svg"))
         dialog.setText(message)
         dialog.setStandardButtons(
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
