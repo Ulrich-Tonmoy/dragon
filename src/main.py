@@ -26,8 +26,7 @@ class MainWindow(QMainWindow):
 
     def init_ui(self):
         # Window
-        self.setWindowTitle("Dragon")
-        self.setWindowIcon(QIcon("./src/resources/app-icons/logo1.png"))
+        self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.resize(900, 700)
 
         # Style
