@@ -43,6 +43,15 @@ class MainWindow(QMainWindow):
 
         self.show()
 
+    def mousePressEvent(self, event):
+        self.dragPos = event.globalPosition().toPoint()
+        print("press")
+
+    def mouseMoveEvent(self, event):
+        self.move(self.pos() + event.globalPosition().toPoint() - self.dragPos)
+        self.dragPos = event.globalPosition().toPoint()
+        event.accept()
+
     def set_up_menu(self):
         menu_bar = self.menuBar()
 
