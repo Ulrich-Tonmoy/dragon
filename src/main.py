@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
 
         self.init_ui()
 
+        self.isMaximized = False
         self.current_file = None
         self.current_open_sidebar = None
 
@@ -38,21 +39,52 @@ class MainWindow(QMainWindow):
 
         self.statusBar().setStyleSheet("color : white")
 
-        self.set_up_menu()
-        self.set_up_body()
+        self.setup_header()
+        self.setup_body()
 
         self.show()
 
     def mousePressEvent(self, event):
         self.dragPos = event.globalPosition().toPoint()
-        print("press")
 
     def mouseMoveEvent(self, event):
         self.move(self.pos() + event.globalPosition().toPoint() - self.dragPos)
         self.dragPos = event.globalPosition().toPoint()
         event.accept()
 
-    def set_up_menu(self):
+    def toggle_window(self):
+        if self.isMaximized:
+            self.isMaximized = False
+            self.showNormal()
+        else:
+            self.isMaximized = True
+            self.showMaximized()
+
+    def setup_header(self):
+        header_widget = QWidget()
+        header_layout = QHBoxLayout()
+        header_layout.setContentsMargins(4, 2, 4, 2)
+        header_layout.setSpacing(0)
+
+        left_widget = QWidget()
+        left_layout = QHBoxLayout()
+        left_layout.setContentsMargins(0, 0, 0, 0)
+        left_layout.setSpacing(0)
+        # left_layout.setAlignment(Qt.AlignmentFlag.AlignLeft)
+
+        # Add icon to the left of the menu
+        icon = QLabel()
+        icon.setContentsMargins(0, 0, 0, 0)
+        icon.setMargin(0)
+        # icon.setSpacing(0)
+        icon.setPixmap(
+            QPixmap("./src/resources/app-icons/logo1.png").scaled(QSize(30, 30)))
+        # icon_pixmap = QPixmap("./src/resources/app-icons/logo1.png").scaled(32, 32)
+        # icon.setPixmap(icon_pixmap)
+
+        left_layout.addWidget(icon)
+        ##########################################
+        ############# Menu Bar Start #############
         menu_bar = self.menuBar()
 
         # File Menu
@@ -110,6 +142,71 @@ class MainWindow(QMainWindow):
         find_action = edit_menu.addAction("Find")
         find_action.setShortcut("Ctrl+F")
         find_action.triggered.connect(self.find)
+
+        left_layout.addWidget(menu_bar)
+
+        left_widget.setLayout(left_layout)
+        header_layout.addWidget(
+            left_widget, alignment=Qt.AlignmentFlag.AlignLeft)
+        ########################################
+        ############# Menu Bar End #############
+
+        # Add buttons to the center of the menu
+        center_widget = QWidget()
+        center_layout = QHBoxLayout()
+        center_layout.setContentsMargins(0, 0, 0, 0)
+        center_layout.setSpacing(0)
+        # center_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # center_button_1 = QPushButton("Center Button 1")
+        # center_button_2 = QPushButton("Center Button 2")
+        # center_button_3 = QPushButton("Center Button 3")
+        # center_layout.addWidget(center_button_1)
+        # center_layout.addWidget(center_button_2)
+        # center_layout.addWidget(center_button_3)
+        center_label = QLabel("Dragon")
+        center_layout.addWidget(center_label)
+
+        center_widget.setLayout(center_layout)
+        header_layout.addWidget(
+            center_widget, alignment=Qt.AlignmentFlag.AlignCenter)
+
+        # Add button to the right of the menu
+        right_widget = QWidget()
+        right_layout = QHBoxLayout()
+        right_layout.setContentsMargins(0, 0, 0, 0)
+        right_layout.setSpacing(5)
+        # right_layout.setAlignment(Qt.AlignmentFlag.AlignRight)
+
+        minimize_button = QPushButton()
+        minimize_button.setIcon(
+            QIcon("./src/resources/editor-icons/minimize.svg"))
+        minimize_button.setContentsMargins(0, 0, 0, 0)
+        minimize_button.setToolTip("Minimize")
+        minimize_button.clicked.connect(self.showMinimized)
+        right_layout.addWidget(minimize_button)
+
+        min_max_button = QPushButton()
+        min_max_button.setIcon(
+            QIcon("./src/resources/editor-icons/maxwindow.svg"))
+        min_max_button.setContentsMargins(0, 0, 0, 0)
+        min_max_button.clicked.connect(self.toggle_window)
+        right_layout.addWidget(min_max_button)
+
+        close_button = QPushButton()
+        close_button.setIcon(QIcon("./src/resources/editor-icons/close.svg"))
+        close_button.setContentsMargins(0, 0, 0, 0)
+        close_button.setToolTip("Close")
+        close_button.clicked.connect(self.close)
+        right_layout.addWidget(close_button)
+
+        # Add menu to the left side of the main window
+        right_widget.setLayout(right_layout)
+        header_layout.addWidget(
+            right_widget, alignment=Qt.AlignmentFlag.AlignRight)
+
+        header_widget.setLayout(header_layout)
+        self.setMenuWidget(header_widget)
 
     def get_editor(self, path: Path = None, is_python_file=True) -> QsciScintilla:
         editor = Editor(path=path, is_python_file=is_python_file)
@@ -178,7 +275,7 @@ class MainWindow(QMainWindow):
         frame.setContentsMargins(0, 0, 0, 0)
         return frame
 
-    def set_up_body(self):
+    def setup_body(self):
         # Body
         body_frame = QFrame()
         body_frame.setFrameShape(QFrame.Shape.StyledPanel)

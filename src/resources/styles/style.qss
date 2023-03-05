@@ -124,6 +124,16 @@ QFrame {
 QFrame:hover {
     color: white;
 }
+QPushButton {
+    background-color: #21252b;
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    color: #d3d3d3;
+}
+QPushButton:hover {
+    color: white;
+}
 QLineEdit {
     background-color: #21252b;
     border: 1px solid #d3d3d3;
